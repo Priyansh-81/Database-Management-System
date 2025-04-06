@@ -1,0 +1,61 @@
+CREATE OR REPLACE FUNCTION get_total_accidents_in_year (input_year IN NUMBER) 
+RETURN NUMBER IS
+    total_accidents NUMBER;
+BEGIN
+    SELECT COUNT(*)
+    INTO total_accidents
+    FROM ACCIDENT
+    WHERE EXTRACT(YEAR FROM accd_date) = input_year;
+    
+    RETURN total_accidents;
+END get_total_accidents_in_year;
+
+
+CREATE OR REPLACE PROCEDURE get_total_damage_per_driver_year (input_driver_id IN VARCHAR2, input_year IN NUMBER) IS
+    total_damage NUMBER;
+BEGIN
+    SELECT SUM(damage_amount)
+    INTO total_damage
+    FROM PARTICIPATED p
+    JOIN ACCIDENT a ON p.report_number = a.report_number
+    WHERE p.driver_id = input_driver_id
+    AND EXTRACT(YEAR FROM a.accd_date) = input_year;
+    
+    DBMS_OUTPUT.PUT_LINE('Total damage for driver ' || input_driver_id || ' in year ' || input_year || ' is: ' || total_damage);
+END get_total_damage_per_driver_year;
+
+
+CREATE OR REPLACE PROCEDURE get_accident_info_by_location (input_location IN VARCHAR2) IS
+BEGIN
+    FOR rec IN (SELECT * FROM ACCIDENT WHERE location = input_location) LOOP
+        DBMS_OUTPUT.PUT_LINE('Report Number: ' || rec.report_number || ', Date: ' || rec.accd_date || ', Location: ' || rec.location);
+    END LOOP;
+END get_accident_info_by_location;
+
+
+CREATE OR REPLACE PROCEDURE get_drivers_no_accidents IS
+BEGIN
+    FOR rec IN (
+        SELECT p.driver_id, p.name, p.address
+        FROM PERSON p
+        LEFT JOIN OWNS o ON p.driver_id = o.driver_id
+        LEFT JOIN PARTICIPATED pa ON o.regno = pa.regno AND p.driver_id = pa.driver_id
+        WHERE pa.report_number IS NULL
+    ) LOOP
+        DBMS_OUTPUT.PUT_LINE('Driver ID: ' || rec.driver_id || ', Name: ' || rec.name || ', Address: ' || rec.address);
+    END LOOP;
+END get_drivers_no_accidents;
+
+
+CREATE OR REPLACE FUNCTION get_total_accidents_for_car (input_regno IN VARCHAR2) 
+RETURN NUMBER IS
+    total_accidents NUMBER;
+BEGIN
+    SELECT COUNT(*)
+    INTO total_accidents
+    FROM PARTICIPATED p
+    WHERE p.regno = input_regno;
+    
+    RETURN total_accidents;
+END get_total_accidents_for_car;
+

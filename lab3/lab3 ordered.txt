@@ -1,0 +1,221 @@
+
+SQL>  insert into ACCIDENT values(112, '21-OCT-2023', 'Kolkata');
+
+1 row created.
+
+SQL>  insert into ACCIDENT values(113, '21-NOV-2023', 'JAMMU');
+
+1 row created.
+
+SQL> insert into OWNS values('p101', 'DL4C');
+
+1 row created.
+
+SQL> insert into OWNS values('p101', 'DL7C');
+
+1 row created.
+
+SQL> insert into OWNS values('p102', 'HR7C');
+
+1 row created.
+
+SQL> insert into ACCIDENT values (12, '25-JAN-2025', 'Manipal');
+
+1 row created.
+
+SQL> insert into PARTICIPATED values('p101', 'DL4C', 12 , 27809);
+
+1 row created.
+
+SQL> insert into PERSON values('p103','Saksham', 'Kolkata');
+
+1 row created.
+
+SQL> insert into PERSON values('p104','Agasi', 'Pune');
+
+1 row created.
+
+SQL> insert into PERSON values('p105','Laxman', 'Thane');
+
+1 row created.
+
+SQL> insert into CAR values('WB45', 'G-Wagon', 2022);
+
+1 row created.
+
+SQL> insert into CAR values('MH88', 'i10', 1969);
+
+1 row created.
+
+SQL> insert into CAR values('MH69', 'Creta', 2016);
+
+1 row created.
+
+SQL> insert into ACCIDENT values(14, '14-feb-2019', 'mars');
+
+1 row created.
+
+SQL> insert into ACCIDENT values(144, '10-feb-2047', 'AlphaCentury');
+
+1 row created.
+
+SQL> insert into OWNS values('p103','WB45');
+
+1 row created.
+
+SQL> insert into OWNS values('p104','MH88');
+
+1 row created.
+
+SQL> insert into PARTICIPATED values ('p104', 'MH88', 112, 63999);
+
+1 row created.
+
+SQL> select * from PERSON;
+
+DRIVER_ID  NAME                           ADDRESS
+---------- ------------------------------ ------------------------------
+p103       Saksham                        Kolkata
+p104       Agasi                          Pune
+p105       Laxman                         Thane
+p101       Priyansh                       kalkaji,Delhi
+p102       Ayrton                         Rohini ,Delhi
+
+SQL> select * from CARS;
+select * from CARS
+              *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> select * from CAR;
+
+REGNO                MODEL                                YEAR
+-------------------- ------------------------------ ----------
+WB45                 G-Wagon                              2022
+MH88                 i10                                  1969
+MH69                 Creta                                2016
+DL3C                 Dezire                               2017
+DL4C                 sunny                                2014
+
+SQL> select * from ACCIDENT;
+
+REPORT_NUMBER ACCD_DATE LOCATION
+------------- --------- --------------------------------------------------
+          112 21-OCT-23 Kolkata
+          113 21-NOV-23 JAMMU
+           12 25-JAN-25 Manipal
+           14 14-FEB-19 mars
+          144 10-FEB-47 AlphaCentury
+
+SQL> select * from OWNS;
+
+DRIVER_ID                      REGNO
+------------------------------ --------------------
+p101                           DL4C
+p101                           DL7C
+p102                           HR7C
+p103                           WB45
+p104                           MH88
+
+SQL> select * from PARTICIPATED;
+
+DRIVER_ID                      REGNO                REPORT_NUMBER DAMAGE_AMOUNT
+------------------------------ -------------------- ------------- -------------
+p101                           DL4C                            12         27809
+p104                           MH88                           112         63999
+
+SQL>
+  2  set DAMAGE_AMOUNT=25000
+  3  where REPORT_NUMBER=12;
+
+1 row updated.
+
+SQL> select * from PARTICIPATED;
+
+DRIVER_ID                      REGNO                REPORT_NUMBER DAMAGE_AMOUNT
+------------------------------ -------------------- ------------- -------------
+p101                           DL4C                            12         25000
+p104                           MH88                           112         63999
+
+
+
+REPORT_NUMBER ACCD_DATE LOCATION
+------------- --------- --------------------------------------------------
+          112 21-OCT-23 Kolkata
+          113 21-NOV-23 JAMMU
+           12 25-JAN-25 Manipal
+           14 14-FEB-19 mars
+          144 10-FEB-47 AlphaCentury
+
+SQL> delete from ACCIDENT
+  2  where extract(year from ACCD_DATE) = 2047;
+
+1 row deleted.
+
+SQL> select * from ACCIDENT;
+
+REPORT_NUMBER ACCD_DATE LOCATION
+------------- --------- --------------------------------------------------
+          112 21-OCT-23 Kolkata
+          113 21-NOV-23 JAMMU
+           12 25-JAN-25 Manipal
+           14 14-FEB-19 mars
+
+SQL>
+
+SQL> select * from PARTICIPATED;
+
+DRIVER_ID                      REGNO                REPORT_NUMBER DAMAGE_AMOUNT
+------------------------------ -------------------- ------------- -------------
+p101                           DL4C                            12         27809
+p104                           MH88                           112         63999
+
+SQL> update PARTICIPATED
+  2  set DAMAGE_AMOUNT=25000
+  3  where REPORT_NUMBER=12;
+
+1 row updated.
+
+SQL> select * from PARTICIPATED;
+
+DRIVER_ID                      REGNO                REPORT_NUMBER DAMAGE_AMOUNT
+------------------------------ -------------------- ------------- -------------
+p101                           DL4C                            12         25000
+p104                           MH88                           112         63999
+
+SQL> delete from ACCIDENT
+  2    where extract(year from ACCD_DATE) = 2047;
+
+1 row deleted.
+
+SQL> select * from ACCIDENT;
+
+REPORT_NUMBER ACCD_DATE LOCATION
+------------- --------- --------------------------------------------------
+          112 21-OCT-23 Kolkata
+          113 21-NOV-23 JAMMU
+           12 25-JAN-25 Manipal
+           14 14-FEB-19 mars
+
+SQL>
+
+Commit complete.
+
+SQL> alter table CAR add POLLUTION varchar(20);
+
+Table altered.
+
+SQL> desc CAR
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ REGNO                                     NOT NULL VARCHAR2(20)
+ MODEL                                              VARCHAR2(30)
+ YEAR                                               NUMBER(38)
+ POLLUTION                                          VARCHAR2(20)
+
+SQL> alter table CAR drop column POLLUTION;
+
+Table altered.
+
+SQL>

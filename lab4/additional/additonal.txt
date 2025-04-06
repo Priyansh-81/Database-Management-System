@@ -1,0 +1,25 @@
+SELECTING STATEMENTS FOR CONVINIENCE
+select * from CUSTOMER;
+select * from ORDERS;
+select * from ITEM;
+select * from ORDER_ITEMS;
+select * from SHIPMENT;
+select * from WAREHOUSE;
+
+desc CUSTOMER;
+desc ORDERS;
+desc ITEM;
+desc ORDER_ITEMS;
+desc SHIPMENT;
+desc WAREHOUSE;
+
+a)
+select cname as CUSTOMER_NAME
+from CUSTOMER natural join ORDERS
+where odate='22-FEB-2025';
+
+select cname as CUSTOMER_NAME
+from CUSTOMER
+join ORDERS ON CUSTOMER.cust# = ORDERS.cust#
+join ORDER_ITEMS ON ORDERS.order# = ORDER_ITEMS.order#
+where odate = '22-FEB-2025';

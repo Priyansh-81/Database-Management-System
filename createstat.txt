@@ -1,0 +1,34 @@
+Create table PERSON(
+driver_id# varchar(30) primary key,
+name varchar(50),
+address varchar(100));
+
+Create table CAR(
+regno varchar(20) primary key,
+model varchar(30),
+Year int);
+
+Create table ACCIDENT(
+report_number int primary key,
+accd_date date,
+location varchar(50));
+
+Create table OWNS(
+driver_id# varchar(30),
+regno varchar(20),
+primary key( driver_id#, regno),
+constraint fk_owns_person foreign key(driver_id#) references PERSON(driver_id#),
+constraint fk_owns_car foreign key(regno) references CAR(regno));
+
+Create table PARTICIPATED(
+driver_id# varchar(30),
+regno varchar(20),
+report_number int,
+damage_amount int,
+primary key (driver_id#, regno, report_number),
+constraint fk_participated_person foreign key(driver_id#) references PERSON(driver_id#),
+constraint fk_participated_car foreign key(regno) references CAR(regno));
+
+Alter table PARTICIPATED 
+add constraint fk_participated_accident
+foreign key (report_number) references ACCIDENT(report_number);

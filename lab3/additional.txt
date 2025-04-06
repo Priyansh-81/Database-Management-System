@@ -1,0 +1,330 @@
+SELECTING STATEMENTS FOR CONVINIENCE
+select * from CUSTOMER;
+select * from orderidS;
+select * from ITEM;
+select * from orderid_ITEMS;
+select * from SHIPMENT;
+select * from WAREHOUSE;
+
+desc CUSTOMER;
+desc ORDERS;
+desc ITEM;
+desc ORDER_ITEMS;
+desc SHIPMENT;
+desc WAREHOUSE;
+
+
+CREATING THE RELATIONS
+
+create table CUSTOMER(
+cust int primary key,
+cname varchar(50),
+city varchar(30));
+
+create table ORDERS(
+orderid int primary key,
+odate date,
+cust int,
+ordamt int);
+
+alter table ORDERS
+add constraint fk_orderids_customer
+foreign key (cust) references CUSTOMER(cust);
+
+create table ITEM(
+item int primary key,
+unitprice int)
+
+create table ORDER_ITEMS(
+orderid int,
+qty int,
+item int,
+primary key(orderid, item),
+foreign key (orderid) references ORDERS(orderid),
+foreign key (item) references ITEM(item));
+
+create table WAREHOUSE(
+warehouse int primary key,
+city varchar(30));
+
+create table SHIPMENT(
+orderid int,
+warehouse int, 
+shipdate date,
+primary key (orderid, warehouse));
+
+alter table SHIPMENT 
+add constraint fk_shipment_orderid
+foreign key (orderid) references ORDERS(orderid);
+
+alter table SHIPMENT 
+add constraint fk_shipment_warehouse
+foreign key (warehouse) references WAREHOUSE(warehouse);
+
+
+POPULATING THE RELATIONS
+
+insert into CUSTOMER (cust, cname, city)
+values (101, 'Ravi Kumar', 'Mumbai');
+
+insert into CUSTOMER (cust, cname, city)
+values (102, 'Priya Sharma', 'Delhi');
+
+insert into CUSTOMER (cust, cname, city)
+values (103, 'Amit Patel', 'Bangalore');
+
+insert into CUSTOMER (cust, cname, city)
+values (104, 'Sneha Iyer', 'Chennai');
+
+insert into CUSTOMER (cust, cname, city)
+values (105, 'Vikram Reddy', 'Hyderabad');
+
+
+insert into ORDERS (orderid, odate, cust, ordamt)
+values (201,'01-feb-2025', 101, 250);
+
+insert into ORDERS (orderid, odate, cust, ordamt)
+values (202, '05-feb-2025', 102, 500);
+
+insert into ORDERS (orderid, odate, cust, ordamt)
+values (203, '10-feb-2025', 103, 150);
+
+insert into ORDERS (orderid, odate, cust, ordamt)
+values (204, '12-feb-2025', 104, 350);
+
+insert into ORDERS (orderid, odate, cust, ordamt)
+values (205, '15-feb-2025', 105, 600);
+
+
+insert into ITEM (item, unitprice)
+values (301, 50);
+
+insert into ITEM (item, unitprice)
+values (302, 100);
+
+insert into ITEM (item, unitprice)
+values (303, 200);
+
+insert into ITEM (item, unitprice)
+values (304, 150);
+
+insert into ITEM (item, unitprice)
+values (305, 75);
+insert into ORDER_ITEMS (orderid, qty, item#)
+values (201, 2, 301);
+
+insert into ORDER_ITEMS (orderid, qty, item#)
+values (202, 3, 302);
+
+insert into ORDER_ITEMS (orderid, qty, item#)
+values (203, 1, 303);
+
+insert into ORDER_ITEMS (orderid, qty, item#)
+values (204, 4, 304);
+
+insert into ORDER_ITEMS (orderid, qty, item#)
+values (205, 5, 305);
+
+insert into WAREHOUSE (warehouse, city)
+values (401, 'Mumbai');
+
+insert into WAREHOUSE (warehouse, city)
+values (402, 'Delhi');
+
+insert into WAREHOUSE (warehouse, city)
+values (403, 'Bangalore');
+
+insert into WAREHOUSE (warehouse, city)
+values (404, 'Chennai');
+
+insert into WAREHOUSE (warehouse#, city)
+values (405, 'Hyderabad');
+
+insert into SHIPMENT (orderid, warehouse, shipdate)
+values (201, 401, '02-feb-2025');
+
+insert into SHIPMENT (orderid, warehouse, shipdate)
+values (202, 402,'06-feb-2025');
+
+insert into SHIPMENT (orderid, warehouse, shipdate)
+values (203, 403,'11-feb-2025');
+
+insert into SHIPMENT (orderid#, warehouse#, shipdate)
+values (204, 404, '13-feb-2025');
+
+insert into SHIPMENT (orderid#, warehouse#, shipdate)
+values (205, 405, '16-feb-2025');
+
+
+
+
+
+NOT ENOUGH DATE
+
+inserting more data
+
+insert into CUSTOMER (cust, cname, city)
+values (106, 'Neha Gupta', 'Pune');
+
+insert into CUSTOMER (cust, cname, city)
+values (107, 'Arjun Singh', 'Kolkata');
+
+insert into CUSTOMER (cust, cname, city)
+values (108, 'Sita Sharma', 'Jaipur');
+
+insert into CUSTOMER (cust, cname, city)
+values (109, 'Rahul Mehta', 'Surat');
+
+insert into CUSTOMER (cust, cname, city)
+values (110, 'Deepika Rai', 'Lucknow');
+
+
+insert into orderidS (orderid#, odate, cust, ordamt)
+values (206, '20-Feb-2025', 106, 400);
+
+insert into orderidS (orderid#, odate, cust, ordamt)
+values (207, '21-Feb-2025', 107, 550);
+
+insert into orderidS (orderid#, odate, cust, ordamt)
+values (208, '22-Feb-2025', 108, 800);
+
+insert into orderidS (orderid#, odate, cust, ordamt)
+values (209, '23-Feb-2025', 109, 300);
+
+insert into orderidS (orderid#, odate, cust, ordamt)
+values (210, '24-Feb-2025', 110, 150);
+
+-- Additional orderids for existing customers for variety
+insert into orderidS (orderid#, odate, cust, ordamt)
+values (211, '25-Feb-2025', 106, 700);
+
+insert into orderidS (orderid#, odate, cust, ordamt)
+values (212, '26-Feb-2025', 107, 350);
+
+insert into orderidS (orderid#, odate, cust, ordamt)
+values (213, '27-Feb-2025', 108, 600);
+
+insert into orderidS (orderid#, odate, cust, ordamt)
+values (214, '28-Feb-2025', 109, 450);
+
+insert into orderidS (orderid#, odate, cust, ordamt)
+values (215, '01-Mar-2025', 110, 500);
+
+
+insert into ITEM (item#, unitprice)
+values (306, 120);
+
+insert into ITEM (item#, unitprice)
+values (307, 180);
+
+insert into ITEM (item#, unitprice)
+values (308, 350);
+
+insert into ITEM (item#, unitprice)
+values (309, 200);
+
+insert into ITEM (item#, unitprice)
+values (310, 90);
+
+
+insert into orderid_ITEMS (orderid#, qty, item#)
+values (206, 2, 306);
+
+insert into orderid_ITEMS (orderid#, qty, item#)
+values (207, 3, 307);
+
+insert into orderid_ITEMS (orderid#, qty, item#)
+values (208, 4, 308);
+
+insert into orderid_ITEMS (orderid#, qty, item#)
+values (209, 2, 309);
+
+insert into orderid_ITEMS (orderid#, qty, item#)
+values (210, 5, 310);
+
+-- Additional items for previous orderids for variety
+insert into orderid_ITEMS (orderid#, qty, item#)
+values (211, 1, 306);
+
+insert into orderid_ITEMS (orderid#, qty, item#)
+values (212, 2, 307);
+
+insert into orderid_ITEMS (orderid#, qty, item#)
+values (213, 3, 308);
+
+insert into orderid_ITEMS (orderid#, qty, item#)
+values (214, 1, 309);
+
+insert into orderid_ITEMS (orderid#, qty, item#)
+values (215, 4, 310);
+
+
+insert into WAREHOUSE (warehouse#, city)
+values (406, 'Pune');
+
+insert into WAREHOUSE (warehouse#, city)
+values (407, 'Kolkata');
+
+insert into WAREHOUSE (warehouse#, city)
+values (408, 'Jaipur');
+
+insert into WAREHOUSE (warehouse#, city)
+values (409, 'Surat');
+
+insert into WAREHOUSE (warehouse#, city)
+values (410, 'Lucknow');
+
+
+
+insert into SHIPMENT (orderid#, warehouse#, shipdate)
+values (206, 406, '21-Feb-2025');
+
+insert into SHIPMENT (orderid#, warehouse#, shipdate)
+values (207, 407, '22-Feb-2025');
+
+insert into SHIPMENT (orderid#, warehouse#, shipdate)
+values (208, 408, '23-Feb-2025');
+
+insert into SHIPMENT (orderid#, warehouse#, shipdate)
+values (209, 409, '24-Feb-2025');
+
+insert into SHIPMENT (orderid#, warehouse#, shipdate)
+values (210, 410, '25-Feb-2025');
+
+-- Additional shipments for variety
+insert into SHIPMENT (orderid#, warehouse#, shipdate)
+values (211, 406, '26-Feb-2025');
+
+insert into SHIPMENT (orderid#, warehouse#, shipdate)
+values (212, 407, '27-Feb-2025');
+
+insert into SHIPMENT (orderid#, warehouse#, shipdate)
+values (213, 408, '28-Feb-2025');
+
+insert into SHIPMENT (orderid#, warehouse#, shipdate)
+values (214, 409, '01-Mar-2025');
+
+insert into SHIPMENT (orderid#, warehouse#, shipdate)
+values (215, 410, '02-Mar-2025');
+
+
+
+
+
+QUERIES
+
+select cname as CUSTNAME, count(orderid#) as NO_OF_orderidS, avg(ordamt) as AVG_orderid_AMT
+from orderidS natural join CUSTOMER 
+group by cname;
+
+
+select distinct orderid# as orderid_NO 
+from SHIPMENT natural join WAREHOUSE
+group by orderid#,CITY
+having city='Delhi';
+
+update orderidS O1
+set ordamt = case
+    when (select count(*) from orderids O2 where O1.cust = O2.cust) > 10 then O1.ordamt * 0.90
+    else O1.ordamt * 0.95
+end;

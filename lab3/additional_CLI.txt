@@ -1,0 +1,746 @@
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Fri Feb 28 14:08:47 2025
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+Enter user-name: CCE230953450@ictorcl
+Enter password:
+Last Successful login time: Sat Feb 22 2025 16:00:58 +05:30
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0
+
+SQL> create table CUSTOMER(
+  2  cust# int primary key,
+  3  cname varchar(50),
+  4  city varchar(30));
+
+Table created.
+
+SQL> create table ORDERS(
+  2  order# int primary key,
+  3  odate date,
+  4  cust# int,
+  5  ordamt int);
+
+Table created.
+
+SQL> desc ORDERS
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ORDER#                                    NOT NULL NUMBER(38)
+ ODATE                                              DATE
+ CUST#                                              NUMBER(38)
+ ORDAMT                                             NUMBER(38)
+
+SQL> alter table ORDERS
+  2  add constraint fk_orders_customer
+  3  foreign key cust# reference CUSTOMER(cust#);
+foreign key cust# reference CUSTOMER(cust#)
+            *
+ERROR at line 3:
+ORA-00906: missing left parenthesis
+
+
+SQL>
+SQL>
+SQL> alter table ORDERS
+  2  add constraint fk_orders_customer
+  3  foreign key (cust#) references CUSTOMER(cust#);
+
+Table altered.
+
+SQL> desc orders
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ORDER#                                    NOT NULL NUMBER(38)
+ ODATE                                              DATE
+ CUST#                                              NUMBER(38)
+ ORDAMT                                             NUMBER(38)
+
+SQL> create table ITEM(
+  2  item# int primary key,
+  3  unitprice int);
+
+Table created.
+
+SQL> create table order_items(
+  2  order# int,
+  3  qty int,
+  4  item# int,
+  5  primary key(order#, item#),
+  6  foreign key (order#) references ORDERS(order#),
+  7  foreign key (item#) references ITEM(item#));
+
+Table created.
+
+SQL> create table shipment(
+  2  order# int,
+  3  warehouse# int,
+  4  shipdate date,
+  5  primary key (order#, warehouse#));
+
+Table created.
+
+SQL> alter table shipment
+  2  add constraint fk_shipment_order
+  3  foreign key (order#) references ORDERS(order#);
+
+Table altered.
+
+SQL> create table warehouse(
+  2  warehouse# int primary key,
+  3  city varchar(30));
+
+Table created.
+
+SQL> drop table shipment;
+
+Table dropped.
+
+SQL> drop table warehouse;
+
+Table dropped.
+
+SQL> drop table order_items;
+
+Table dropped.
+
+SQL> create table ORDER_ITEMS(
+  2  order# int,
+  3  qty int,
+  4  item# int,
+  5  primary key(order#, item#),
+  6  foreign key (order#) references ORDERS(order#),
+  7  foreign key (item#) references ITEM(item#));
+
+Table created.
+
+SQL> create table WAREHOUSE(
+  2  warehouse# int primary key,
+  3  city varchar(30));
+
+Table created.
+
+SQL> alter table SHIPMENT
+  2  add constraint fk_shipment_order
+  3
+SQL> create table SHIPMENT(
+  2  order# int,
+  3  warehouse# int,
+  4  shipdate date,
+  5  primary key (order#, warehouse#));
+
+Table created.
+
+SQL> alter table SHIPMENT
+  2  add constraint fk_shipment_order
+  3  foreign key (order#) references ORDERS(order#);
+
+Table altered.
+
+SQL> alter table SHIPMENT
+  2  add constraint fk_shipment_warehouse
+  3  foreign key (warehouse#) references WAREHOUSE(warehouse#);
+
+Table altered.
+
+SQL> insert into CUSTOMER (cust#, cname, city)
+  2  values (101, 'Ravi Kumar', 'Mumbai');
+
+1 row created.
+
+SQL>
+SQL> insert into CUSTOMER (cust#, cname, city)
+  2  values (102, 'Priya Sharma', 'Delhi');
+
+1 row created.
+
+SQL>
+SQL> insert into CUSTOMER (cust#, cname, city)
+  2  values (103, 'Amit Patel', 'Bangalore');
+
+1 row created.
+
+SQL>
+SQL> insert into CUSTOMER (cust#, cname, city)
+  2  values (104, 'Sneha Iyer', 'Chennai');
+
+1 row created.
+
+SQL>
+SQL> insert into CUSTOMER (cust#, cname, city)
+  2  values (105, 'Vikram Reddy', 'Hyderabad');
+
+1 row created.
+
+SQL> select * from CUSTOMER;
+
+     CUST# CNAME
+---------- --------------------------------------------------
+CITY
+------------------------------
+       101 Ravi Kumar
+Mumbai
+
+       102 Priya Sharma
+Delhi
+
+       103 Amit Patel
+Bangalore
+
+
+     CUST# CNAME
+---------- --------------------------------------------------
+CITY
+------------------------------
+       104 Sneha Iyer
+Chennai
+
+       105 Vikram Reddy
+Hyderabad
+
+
+SQL> insert into ORDERS (order#, odate, cust#, ordamt)
+  2  values (201,'01-feb-2025', 101, 250);
+
+1 row created.
+
+SQL>
+SQL> insert into ORDERS (order#, odate, cust#, ordamt)
+  2  values (202, '05-feb-2025', 102, 500);
+
+1 row created.
+
+SQL>
+SQL> insert into ORDERS (order#, odate, cust#, ordamt)
+  2  values (203, '10-feb-2025', 103, 150);
+
+1 row created.
+
+SQL>
+SQL> insert into ORDERS (order#, odate, cust#, ordamt)
+  2  values (204, '12-feb-2025', 104, 350);
+
+1 row created.
+
+SQL>
+SQL> insert into ORDERS (order#, odate, cust#, ordamt)
+  2  values (205, '15-feb-2025', 105, 600);
+
+1 row created.
+
+SQL>
+SQL>
+SQL> insert into ITEM (item#, unitprice)
+  2  values (301, 50);
+
+1 row created.
+
+SQL>
+SQL> insert into ITEM (item#, unitprice)
+  2  values (302, 100);
+
+1 row created.
+
+SQL>
+SQL> insert into ITEM (item#, unitprice)
+  2  values (303, 200);
+
+1 row created.
+
+SQL>
+SQL> insert into ITEM (item#, unitprice)
+  2  values (304, 150);
+
+1 row created.
+
+SQL>
+SQL> insert into ITEM (item#, unitprice)
+  2  values (305, 75);
+
+1 row created.
+
+SQL> insert into ORDER_ITEMS (order#, qty, item#)
+  2  values (201, 2, 301);
+
+1 row created.
+
+SQL>
+SQL> insert into ORDER_ITEMS (order#, qty, item#)
+  2  values (202, 3, 302);
+
+1 row created.
+
+SQL>
+SQL> insert into ORDER_ITEMS (order#, qty, item#)
+  2  values (203, 1, 303);
+
+1 row created.
+
+SQL>
+SQL> insert into ORDER_ITEMS (order#, qty, item#)
+  2  values (204, 4, 304);
+
+1 row created.
+
+SQL>
+SQL> insert into ORDER_ITEMS (order#, qty, item#)
+  2  values (205, 5, 305);
+
+1 row created.
+
+SQL>
+SQL> insert into WAREHOUSE (warehouse#, city)
+  2  values (401, 'Mumbai');
+
+1 row created.
+
+SQL>
+SQL> insert into WAREHOUSE (warehouse#, city)
+  2  values (402, 'Delhi');
+
+1 row created.
+
+SQL>
+SQL> insert into WAREHOUSE (warehouse#, city)
+  2  values (403, 'Bangalore');
+
+1 row created.
+
+SQL>
+SQL> insert into WAREHOUSE (warehouse#, city)
+  2  values (404, 'Chennai');
+
+1 row created.
+
+SQL>
+SQL> insert into WAREHOUSE (warehouse#, city)
+  2  values (405, 'Hyderabad');
+
+1 row created.
+
+SQL>
+SQL> insert into SHIPMENT (order#, warehouse#, shipdate)
+  2  values (201, 401, '02-feb-2025');
+
+1 row created.
+
+SQL>
+SQL> insert into SHIPMENT (order#, warehouse#, shipdate)
+  2  values (202, 402,'06-feb-2025');
+
+1 row created.
+
+SQL>
+SQL> insert into SHIPMENT (order#, warehouse#, shipdate)
+  2  values (203, 403,'11-feb-2025');
+
+1 row created.
+
+SQL>
+SQL> insert into SHIPMENT (order#, warehouse#, shipdate)
+  2  values (204, 404, '13-feb-2025');
+
+1 row created.
+
+SQL>
+SQL> insert into SHIPMENT (order#, warehouse#, shipdate)
+  2  values (205, 405, '16-feb-2025');
+
+1 row created.
+
+SQL>
+SQL> select * from CUSTOMER;
+
+     CUST# CNAME
+---------- --------------------------------------------------
+CITY
+------------------------------
+       101 Ravi Kumar
+Mumbai
+
+       102 Priya Sharma
+Delhi
+
+       103 Amit Patel
+Bangalore
+
+
+     CUST# CNAME
+---------- --------------------------------------------------
+CITY
+------------------------------
+       104 Sneha Iyer
+Chennai
+
+       105 Vikram Reddy
+Hyderabad
+
+
+SQL> select * from ORDERS;
+
+    ORDER# ODATE          CUST#     ORDAMT
+---------- --------- ---------- ----------
+       201 01-FEB-25        101        250
+       202 05-FEB-25        102        500
+       203 10-FEB-25        103        150
+       204 12-FEB-25        104        350
+       205 15-FEB-25        105        600
+
+SQL> select * from ORDER_ITEMS;
+
+    ORDER#        QTY      ITEM#
+---------- ---------- ----------
+       201          2        301
+       202          3        302
+       203          1        303
+       204          4        304
+       205          5        305
+
+SQL> select * from ITEM;
+
+     ITEM#  UNITPRICE
+---------- ----------
+       301         50
+       302        100
+       303        200
+       304        150
+       305         75
+
+SQL> select * from SHIPMENT;
+
+    ORDER# WAREHOUSE# SHIPDATE
+---------- ---------- ---------
+       201        401 02-FEB-25
+       202        402 06-FEB-25
+       203        403 11-FEB-25
+       204        404 13-FEB-25
+       205        405 16-FEB-25
+
+SQL> select * from WAREHOUSE;
+
+WAREHOUSE# CITY
+---------- ------------------------------
+       401 Mumbai
+       402 Delhi
+       403 Bangalore
+       404 Chennai
+       405 Hyderabad
+
+SQL> alter table CUSTOMER modify cname varchar(30);
+
+Table altered.
+
+SQL> select * from CUSTOMER;
+
+     CUST# CNAME                          CITY
+---------- ------------------------------ ------------------------------
+       101 Ravi Kumar                     Mumbai
+       102 Priya Sharma                   Delhi
+       103 Amit Patel                     Bangalore
+       104 Sneha Iyer                     Chennai
+       105 Vikram Reddy                   Hyderabad
+
+SQL> commit;
+
+Commit complete.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0
+
+SQL> select * from CUSTOMER;
+
+     CUST# CNAME                          CITY
+---------- ------------------------------ ------------------------------
+       101 Ravi Kumar                     Mumbai
+       102 Priya Sharma                   Delhi
+       103 Amit Patel                     Bangalore
+       104 Sneha Iyer                     Chennai
+       105 Vikram Reddy                   Hyderabad
+       106 Neha Gupta                     Pune
+       107 Arjun Singh                    Kolkata
+       108 Sita Sharma                    Jaipur
+       109 Rahul Mehta                    Surat
+       110 Deepika Rai                    Lucknow
+
+10 rows selected.
+
+SQL> select * from ORDERS;
+
+    ORDER# ODATE          CUST#     ORDAMT
+---------- --------- ---------- ----------
+       201 01-FEB-25        101        250
+       202 05-FEB-25        102        500
+       203 10-FEB-25        103        150
+       204 12-FEB-25        104        350
+       205 15-FEB-25        105        600
+       206 20-FEB-25        106        400
+       207 21-FEB-25        107        550
+       208 22-FEB-25        108        800
+       209 23-FEB-25        109        300
+       210 24-FEB-25        110        150
+       211 25-FEB-25        106        700
+
+    ORDER# ODATE          CUST#     ORDAMT
+---------- --------- ---------- ----------
+       212 26-FEB-25        107        350
+       213 27-FEB-25        108        600
+       214 28-FEB-25        109        450
+       215 01-MAR-25        110        500
+
+15 rows selected.
+
+SQL> select * from ITEM;
+
+     ITEM#  UNITPRICE
+---------- ----------
+       301         50
+       302        100
+       303        200
+       304        150
+       305         75
+       306        120
+       307        180
+       308        350
+       309        200
+       310         90
+
+10 rows selected.
+
+SQL> select * from ORDER_ITEMS;
+
+    ORDER#        QTY      ITEM#
+---------- ---------- ----------
+       201          2        301
+       202          3        302
+       203          1        303
+       204          4        304
+       205          5        305
+       206          2        306
+       207          3        307
+       208          4        308
+       209          2        309
+       210          5        310
+       211          1        306
+
+    ORDER#        QTY      ITEM#
+---------- ---------- ----------
+       212          2        307
+       213          3        308
+       214          1        309
+       215          4        310
+
+15 rows selected.
+
+SQL> select * from SHIPMENT;
+
+    ORDER# WAREHOUSE# SHIPDATE
+---------- ---------- ---------
+       201        401 02-FEB-25
+       202        402 06-FEB-25
+       203        403 11-FEB-25
+       204        404 13-FEB-25
+       205        405 16-FEB-25
+       206        406 21-FEB-25
+       207        407 22-FEB-25
+       208        408 23-FEB-25
+       209        409 24-FEB-25
+       210        410 25-FEB-25
+       211        406 26-FEB-25
+
+    ORDER# WAREHOUSE# SHIPDATE
+---------- ---------- ---------
+       212        407 27-FEB-25
+       213        408 28-FEB-25
+       214        409 01-MAR-25
+       215        410 02-MAR-25
+
+15 rows selected.
+
+SQL> select * from WAREHOUSE;
+
+WAREHOUSE# CITY
+---------- ------------------------------
+       401 Mumbai
+       402 Delhi
+       403 Bangalore
+       404 Chennai
+       405 Hyderabad
+       406 Pune
+       407 Kolkata
+       408 Jaipur
+       409 Surat
+       410 Lucknow
+
+10 rows selected.
+
+SQL> select cname as CUSTNAME, count(order#) as NO_OF_ORDERS, avg(ordamt) as AVG_ORDER_AMT
+  2  from ORDERS natural join CUSTOMER
+  3  group by cname;
+
+CUSTNAME                       NO_OF_ORDERS AVG_ORDER_AMT
+------------------------------ ------------ -------------
+Amit Patel                                1           150
+Deepika Rai                               2           325
+Ravi Kumar                                1           250
+Sneha Iyer                                1           350
+Sita Sharma                               2           700
+Neha Gupta                                2           550
+Arjun Singh                               2           450
+Rahul Mehta                               2           375
+Priya Sharma                              1           500
+Vikram Reddy                              1           600
+
+10 rows selected.
+
+SQL>
+
+SQL> update ORDERS O1
+  2  set ordamt = case
+  3      when (select count(*) from orders O2 where O1.cust# = O2.cust#) > 10 then O1.ordamt * 0.90
+  4      else O1.ordamt * 0.95
+  5  end;
+
+15 rows updated
+
+
+SQL> update ORDERS O1
+  2  set ordamt = case
+  3      when (select count(*) from orders O2 where O1.cust# = O2.cust#) > 10 then O1.ordamt * 0.90
+  4      else O1.ordamt * 0.95
+  5  end;
+
+15 rows updated.
+
+SQL> select * from CUSTOMER;
+
+     CUST# CNAME                          CITY
+---------- ------------------------------ ------------------------------
+       101 Ravi Kumar                     Mumbai
+       102 Priya Sharma                   Delhi
+       103 Amit Patel                     Bangalore
+       104 Sneha Iyer                     Chennai
+       105 Vikram Reddy                   Hyderabad
+       106 Neha Gupta                     Pune
+       107 Arjun Singh                    Kolkata
+       108 Sita Sharma                    Jaipur
+       109 Rahul Mehta                    Surat
+       110 Deepika Rai                    Lucknow
+
+10 rows selected.
+
+SQL> select * from ORDERS;
+
+    ORDER# ODATE          CUST#     ORDAMT
+---------- --------- ---------- ----------
+       201 01-FEB-25        101        226
+       202 05-FEB-25        102        451
+       203 10-FEB-25        103        136
+       204 12-FEB-25        104        316
+       205 15-FEB-25        105        542
+       206 20-FEB-25        106        361
+       207 21-FEB-25        107        497
+       208 22-FEB-25        108        722
+       209 23-FEB-25        109        271
+       210 24-FEB-25        110        136
+       211 25-FEB-25        106        632
+
+    ORDER# ODATE          CUST#     ORDAMT
+---------- --------- ---------- ----------
+       212 26-FEB-25        107        316
+       213 27-FEB-25        108        542
+       214 28-FEB-25        109        407
+       215 01-MAR-25        110        451
+
+15 rows selected.
+
+SQL> select * from ITEM;
+
+     ITEM#  UNITPRICE
+---------- ----------
+       301         50
+       302        100
+       303        200
+       304        150
+       305         75
+       306        120
+       307        180
+       308        350
+       309        200
+       310         90
+
+10 rows selected.
+
+SQL> select * from ORDER_ITEMS;
+
+    ORDER#        QTY      ITEM#
+---------- ---------- ----------
+       201          2        301
+       202          3        302
+       203          1        303
+       204          4        304
+       205          5        305
+       206          2        306
+       207          3        307
+       208          4        308
+       209          2        309
+       210          5        310
+       211          1        306
+
+    ORDER#        QTY      ITEM#
+---------- ---------- ----------
+       212          2        307
+       213          3        308
+       214          1        309
+       215          4        310
+
+15 rows selected.
+
+SQL> select * from SHIPMENT;
+
+    ORDER# WAREHOUSE# SHIPDATE
+---------- ---------- ---------
+       201        401 02-FEB-25
+       202        402 06-FEB-25
+       203        403 11-FEB-25
+       204        404 13-FEB-25
+       205        405 16-FEB-25
+       206        406 21-FEB-25
+       207        407 22-FEB-25
+       208        408 23-FEB-25
+       209        409 24-FEB-25
+       210        410 25-FEB-25
+       211        406 26-FEB-25
+
+    ORDER# WAREHOUSE# SHIPDATE
+---------- ---------- ---------
+       212        407 27-FEB-25
+       213        408 28-FEB-25
+       214        409 01-MAR-25
+       215        410 02-MAR-25
+
+15 rows selected.
+
+SQL> select * from WAREHOUSE;
+
+WAREHOUSE# CITY
+---------- ------------------------------
+       401 Mumbai
+       402 Delhi
+       403 Bangalore
+       404 Chennai
+       405 Hyderabad
+       406 Pune
+       407 Kolkata
+       408 Jaipur
+       409 Surat
+       410 Lucknow
+
+10 rows selected.
+
+SQL>

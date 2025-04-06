@@ -1,0 +1,43 @@
+Question-1
+
+select count(DRIVER_ID) as Total
+from PARTICIPATED natural join ACCIDENT natural join OWNS 
+where extract (year from accd_date) = 2008;
+
+Question-2
+
+select MODEL,count(REPORT_NUMBER) as NUMBER_OF_ACCIDENTS
+from CAR, PARTICIPATED
+where CAR.REGNO=PARTICIPATED.REGNO
+group by MODEL;
+
+Question-3
+
+select NAME as OWNER_NAME, count(REPORT_NUMBER) as "No. of Accidents", sum(DAMAGE_AMOUNT) as "Total Damage Amount"
+from PERSON natural join PARTICIPATED
+group by NAME
+order by sum(DAMAGE_AMOUNT) desc;
+
+
+Question-4
+
+select DRIVER_ID, NAME
+from PERSON natural join PARTICIPATED
+group by DRIVER_ID, NAME
+having count(REPORT_NUMBER) >= 2;
+
+Question-5
+
+select NAME
+from PERSON p
+where not exists (
+    select *
+    from PARTICIPATED pa
+    where p.DRIVER_ID = pa.DRIVER_ID
+    group by pa.DRIVER_ID
+    having count(pa.REPORT_NUMBER) > 0
+);
+
+select DRIVER_ID, NAME from PERSON
+minus
+select DRIVER_ID, NAME from PERSON natural join PARTICIPATED;

@@ -1,0 +1,17 @@
+update PARTICIPATED
+set damage_amount=25000
+where report_number=102;
+
+delete from ACCIDENT
+where extract(year from accd_date)=2023;
+
+alter table PERSON
+add something int;
+
+alter table PERSON 
+drop column something;
+
+alter table PARTICIPATED
+add constraint check_something
+check(damage_amount>0);
+

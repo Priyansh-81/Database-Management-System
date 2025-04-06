@@ -1,0 +1,597 @@
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Sat Jan 25 14:19:48 2025
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+Enter user-name: CCE230953450@ictorcl
+Enter password:
+Last Successful login time: Sat Jan 25 2025 13:58:29 +05:30
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0
+
+SQL> create table PERSON(
+  2  driver_id varchar(30),
+  3  name varchar(50),
+  4  address varchar(100),
+  5  primary key (driver_id));
+
+Table created.
+
+SQL> desc PERSON
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DRIVER_ID                                 NOT NULL VARCHAR2(30)
+ NAME                                               VARCHAR2(50)
+ ADDRESS                                            VARCHAR2(100)
+
+SQL> create table CAR(
+  2  regno varchar(20) primary key,
+  3  model varchar(30),
+  4  Year int);
+
+Table created.
+
+SQL> desc CAR
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ REGNO                                     NOT NULL VARCHAR2(20)
+ MODEL                                              VARCHAR2(30)
+ YEAR                                               NUMBER(38)
+
+SQL> create table ACCIDENT(
+  2  report_number int primary key'
+  3
+SQL> report_number int primary key,
+SP2-0734: unknown command beginning "report_num..." - rest of line ignored.
+SQL> create table ACCIDENT(
+  2  report_number int primary key,
+  3  accd_date date,
+  4  location varchar(50));
+
+Table created.
+
+SQL> desc ACCIDENT
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ REPORT_NUMBER                             NOT NULL NUMBER(38)
+ ACCD_DATE                                          DATE
+ LOCATION                                           VARCHAR2(50)
+
+SQL> create table OWNS(
+  2  driver_id varchar(30),
+  3  regno varchar(20),
+  4  primary key(driver_id, regno));
+
+Table created.
+
+SQL> desc OWNS
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DRIVER_ID                                 NOT NULL VARCHAR2(30)
+ REGNO                                     NOT NULL VARCHAR2(20)
+
+SQL>
+SQL>
+
+
+create table PARTICIPATED(
+     driver_id varchar(30),
+     regno varchar(20),
+     report_number int,
+     damage_amount int,
+     primary key(driver_id,report_number,regno),
+     foreign key(driver_id) references PERSON(driver_id),
+     foreign key(regno) references CAR(regno),
+     foreign key(report_number) references ACCIDENT(report_number));
+
+
+
+insert into PERSON values('p101', 'Priyansh', 'kalkaji,Delhi');
+
+insert into CAR values('DL3C', 'Dezire', 2017);
+
+
+
+SQL> desc PARTICIPATED
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DRIVER_ID                                 NOT NULL VARCHAR2(30)
+ REGNO                                     NOT NULL VARCHAR2(20)
+ REPORT_NUMBER                             NOT NULL NUMBER(38)
+ DAMAGE_AMOUNT                                      NUMBER(38)
+
+SQL> insert into PERSON values('p101', 'Priyansh', 'kalkaji,Delhi');
+
+1 row created.
+
+SQL> insert into PERSON values('p102', 'Ayrton', 'Rohini ,Delhi');
+
+1 row created.
+
+SQL> select * from PERSON;
+
+DRIVER_ID
+------------------------------
+NAME
+--------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+p101
+Priyansh
+kalkaji,Delhi
+
+p102
+Ayrton
+Rohini ,Delhi
+
+DRIVER_ID
+------------------------------
+NAME
+--------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+
+
+SQL> insert into CAR values('DL3C', 'Dezire', 2017);
+
+1 row created.
+
+SQL>
+
+SQL> insert into CAR values('DL3C', 'Dezire', 2017);
+
+1 row created.
+
+SQL> insert into CAR values('DL3C', 'Dezire', 2017);
+insert into CAR values('DL3C', 'Dezire', 2017)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (CCE230953450.SYS_C0068270) violated
+
+
+SQL> desc CAR
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ REGNO                                     NOT NULL VARCHAR2(20)
+ MODEL                                              VARCHAR2(30)
+ YEAR                                               NUMBER(38)
+
+SQL> insert into CAR values('DL4C', 'sunny', 2014);
+
+1 row created.
+
+SQL> select * from CAR;
+
+REGNO                MODEL                                YEAR
+-------------------- ------------------------------ ----------
+DL3C                 Dezire                               2017
+DL4C                 sunny                                2014
+SQL> alter table PERSON modify address varchar(30);
+
+Table altered.
+
+SQL> select * from PERSON;
+
+DRIVER_ID
+------------------------------
+NAME
+--------------------------------------------------
+ADDRESS
+------------------------------
+p101
+Priyansh
+kalkaji,Delhi
+
+p102
+Ayrton
+Rohini ,Delhi
+
+DRIVER_ID
+------------------------------
+NAME
+--------------------------------------------------
+ADDRESS
+------------------------------
+
+
+SQL> alter table PERSON modify NAME varchar(30);
+
+Table altered.
+
+SQL> select * from PERSON;
+
+DRIVER_ID                      NAME
+------------------------------ ------------------------------
+ADDRESS
+------------------------------
+p101                           Priyansh
+kalkaji,Delhi
+
+p102                           Ayrton
+Rohini ,Delhi
+
+
+SQL> alter table PERSON modify driver_id varchar(10);
+
+Table altered.
+
+SQL> select * from PERSON;
+
+DRIVER_ID  NAME                           ADDRESS
+---------- ------------------------------ ------------------------------
+p101       Priyansh                       kalkaji,Delhi
+p102       Ayrton                         Rohini ,Delhi
+
+SQL>
+
+insert into ACCIDENT values(112, '21-OCT-2023', 'Kolkata');
+
+SQL> select * from PERSON;
+
+DRIVER_ID  NAME                           ADDRESS
+---------- ------------------------------ ------------------------------
+p101       Priyansh                       kalkaji,Delhi
+p102       Ayrton                         Rohini ,Delhi
+
+SQL> insert into ACCIDENT values(112, '21-OCT-2023', 'Kolkata');
+
+1 row created.
+
+SQL> insert into ACCIDENT values(113, '21-NOV-2023', 'JAMMU');
+
+1 row created.
+
+SQL> insert into OWNS values('p101', 'DL4C');
+
+1 row created.
+
+SQL> insert into OWNS values('p101', 'DL7C');
+
+1 row created.
+
+SQL> insert into OWNS values('p105', 'HR7C');
+insert into OWNS values('p105', 'HR7C')
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (CCE230953450.FKEY) violated - parent key not
+found
+
+
+SQL> insert into OWNS values('p102', 'HR7C');
+
+1 row created.
+
+SQL> select * form OWNS;
+select * form OWNS
+         *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected
+
+
+SQL> select * from OWNS;
+
+DRIVER_ID                      REGNO
+------------------------------ --------------------
+p101                           DL4C
+p101                           DL7C
+p102                           HR7C
+
+SQL>SQL> insert into ACCIDENT values (12, '25-JAN-2025', 'Manipal');
+
+1 row created.
+
+SQL> insert into PARTICIPATED values('p101', 'DL4C', 12 , 27809);
+
+1 row created.
+
+SQL> select * from PARTICIPATED
+  2  ;
+
+DRIVER_ID                      REGNO                REPORT_NUMBER DAMAGE_AMOUNT
+------------------------------ -------------------- ------------- -------------
+p101                           DL4C                            12         27809
+
+
+
+
+
+
+
+
+SQL> select * from PERSON;
+
+DRIVER_ID  NAME                           ADDRESS
+---------- ------------------------------ ------------------------------
+p101       Priyansh                       kalkaji,Delhi
+p102       Ayrton                         Rohini ,Delhi
+
+SQL> select * from CAR;
+
+REGNO                MODEL                                YEAR
+-------------------- ------------------------------ ----------
+DL3C                 Dezire                               2017
+DL4C                 sunny                                2014
+
+SQL> select * from ACCIDENT;
+
+REPORT_NUMBER ACCD_DATE LOCATION
+------------- --------- --------------------------------------------------
+          112 21-OCT-23 Kolkata
+          113 21-NOV-23 JAMMU
+           12 25-JAN-25 Manipal
+
+SQL> select * from OWNS;
+
+DRIVER_ID                      REGNO
+------------------------------ --------------------
+p101                           DL4C
+p101                           DL7C
+p102                           HR7C
+
+SQL> select * from PARTICIPATED;
+
+DRIVER_ID                      REGNO                REPORT_NUMBER DAMAGE_AMOUNT
+------------------------------ -------------------- ------------- -------------
+p101                           DL4C                            12         27809
+
+SQL>
+
+
+
+SQL> select * from PARTICIPATED
+  2  ;
+
+DRIVER_ID                      REGNO                REPORT_NUMBER DAMAGE_AMOUNT
+------------------------------ -------------------- ------------- -------------
+p101                           DL4C                            12         27809
+
+SQL> select * from PERSON;
+
+DRIVER_ID  NAME                           ADDRESS
+---------- ------------------------------ ------------------------------
+p101       Priyansh                       kalkaji,Delhi
+p102       Ayrton                         Rohini ,Delhi
+
+SQL> select * from CAR;
+
+REGNO                MODEL                                YEAR
+-------------------- ------------------------------ ----------
+DL3C                 Dezire                               2017
+DL4C                 sunny                                2014
+
+SQL> select * from ACCIDENT;
+
+REPORT_NUMBER ACCD_DATE LOCATION
+------------- --------- --------------------------------------------------
+          112 21-OCT-23 Kolkata
+          113 21-NOV-23 JAMMU
+           12 25-JAN-25 Manipal
+
+SQL> select * from OWNS;
+
+DRIVER_ID                      REGNO
+------------------------------ --------------------
+p101                           DL4C
+p101                           DL7C
+p102                           HR7C
+
+SQL> select * from PARTICIPATED;
+
+DRIVER_ID                      REGNO                REPORT_NUMBER DAMAGE_AMOUNT
+------------------------------ -------------------- ------------- -------------
+p101                           DL4C                            12         27809
+
+SQL> insert into PERSON values('p103','Saksham', 'Kolkata');
+
+1 row created.
+
+SQL> insert into PERSON values('p104','Agasi', 'Pune');
+
+1 row created.
+
+SQL> insert into PERSON values('p105','Laxman', 'Thane');
+
+1 row created.
+
+SQL> insert into CAR values('WB45', 'G-Wagon', 2022);
+
+1 row created.
+
+SQL> insert into CAR values('MH88', 'i10', 1969);
+
+1 row created.
+
+SQL> select * from CAR;
+
+REGNO                MODEL                                YEAR
+-------------------- ------------------------------ ----------
+DL3C                 Dezire                               2017
+DL4C                 sunny                                2014
+WB45                 G-Wagon                              2022
+MH88                 i10                                  1969
+
+SQL> insert into CAR values('MH69', 'Creta', 2016);
+
+1 row created.
+
+SQL> insert into ACCIEDENT values(14, '14-feb-2019', 'mars');
+insert into ACCIEDENT values(14, '14-feb-2019', 'mars')
+            *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> insert into ACCIDENT values(14, '14-feb-2019', 'mars');
+
+1 row created.
+
+SQL> select * from ACCIDENT;
+
+REPORT_NUMBER ACCD_DATE LOCATION
+------------- --------- --------------------------------------------------
+          112 21-OCT-23 Kolkata
+          113 21-NOV-23 JAMMU
+           12 25-JAN-25 Manipal
+           14 14-FEB-19 mars
+
+SQL> insert into ACCIDENT values(144, '10-feb-2047', 'AlphaCentury');
+
+1 row created.
+
+SQL> select * from ACCIDENT;
+
+REPORT_NUMBER ACCD_DATE LOCATION
+------------- --------- --------------------------------------------------
+          112 21-OCT-23 Kolkata
+          113 21-NOV-23 JAMMU
+           12 25-JAN-25 Manipal
+           14 14-FEB-19 mars
+          144 10-FEB-47 AlphaCentury
+
+SQL> select * from OWNS;
+
+DRIVER_ID                      REGNO
+------------------------------ --------------------
+p101                           DL4C
+p101                           DL7C
+p102                           HR7C
+
+SQL> insert into OWNS values('p103','WB45');
+
+1 row created.
+
+SQL> insert into OWNS values('p104','MH88');
+
+1 row created.
+
+SQL> select * from OWNS;
+
+DRIVER_ID                      REGNO
+------------------------------ --------------------
+p101                           DL4C
+p101                           DL7C
+p102                           HR7C
+p103                           WB45
+p104                           MH88
+
+SQL> select * from PARTICIPATED;
+
+DRIVER_ID                      REGNO                REPORT_NUMBER DAMAGE_AMOUNT
+------------------------------ -------------------- ------------- -------------
+p101                           DL4C                            12         27809
+
+SQL> insert into PARTICIPATED values ('p104', 'MH88', 112, 63999);
+
+1 row created.
+
+SQL> select * from PARTICIPATED;
+
+DRIVER_ID                      REGNO                REPORT_NUMBER DAMAGE_AMOUNT
+------------------------------ -------------------- ------------- -------------
+p101                           DL4C                            12         27809
+p104                           MH88                           112         63999
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SQL> select * from PARTICIPATED;
+
+DRIVER_ID                      REGNO                REPORT_NUMBER DAMAGE_AMOUNT
+------------------------------ -------------------- ------------- -------------
+p101                           DL4C                            12         27809
+p104                           MH88                           112         63999
+
+SQL> update table PARTICIPATED
+  2  set
+  3
+SQL> update PARTICIPATED
+  2  set DAMAGE_AMOUNT=25000
+  3  where regno=12;
+where regno=12
+      *
+ERROR at line 3:
+ORA-01722: invalid number
+
+
+SQL> update PARTICIPATED
+  2  set DAMAGE_AMOUNT=25000
+  3  where regno == 12;
+where regno == 12
+             *
+ERROR at line 3:
+ORA-00936: missing expression
+
+
+SQL> update PARTICIPATED
+  2  set DAMAGE_AMOUNT=25000
+  3  where REPORT_NUMBER=12;
+
+1 row updated.
+
+SQL>
+SQL> select * from PARTICIPATED;
+
+DRIVER_ID                      REGNO                REPORT_NUMBER DAMAGE_AMOUNT
+------------------------------ -------------------- ------------- -------------
+p101                           DL4C                            12         25000
+p104                           MH88                           112         63999
+
+REPORT_NUMBER ACCD_DATE LOCATION
+------------- --------- --------------------------------------------------
+          112 21-OCT-23 Kolkata
+          113 21-NOV-23 JAMMU
+           12 25-JAN-25 Manipal
+           14 14-FEB-19 mars
+          144 10-FEB-47 AlphaCentury
+
+SQL> delete from ACCIDENT
+  2  where extract(year from ACCD_DATE) = 2047;
+
+1 row deleted.
+
+SQL> select * from ACCIDENT;
+
+REPORT_NUMBER ACCD_DATE LOCATION
+------------- --------- --------------------------------------------------
+          112 21-OCT-23 Kolkata
+          113 21-NOV-23 JAMMU
+           12 25-JAN-25 Manipal
+           14 14-FEB-19 mars
+
+SQL>
+
+
+Commit complete.
+
+SQL> alter table CAR add POLLUTION varchar(20);
+
+Table altered.
+
+SQL> desc CAR
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ REGNO                                     NOT NULL VARCHAR2(20)
+ MODEL                                              VARCHAR2(30)
+ YEAR                                               NUMBER(38)
+ POLLUTION                                          VARCHAR2(20)
+
+SQL> alter table CAR drop column POLLUTION;
+
+Table altered.
+
+SQL>

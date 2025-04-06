@@ -1,0 +1,239 @@
+CREATION
+
+JUGAD: https://github.com/Addy-Da-Baddy/CCE-Labs/tree/main/Sem%20IV/DBMS%20Lab
+
+create table STUDENT(
+regno varchar(20) primary key,
+name varchar(50),
+major varchar(20),
+bday date);
+
+create table COURSE(
+course# int primary key,
+cname varchar(30),
+dept varchar(30));
+
+create table TEXT(
+book_isbn int primary key,
+booktitle varchar(50),
+publisher varchar(50),
+author varchar(50));
+
+create table BOOK_ADOPTATION(
+course# int,
+sem int,
+book_isbn int,
+primary key(course#, book_isbn));
+
+create table ENROLL(
+regno varchar(20),
+course# int,
+sem int,
+book_isbn int,
+primary key(regno, course#, book_isbn));
+
+alter table ENROLL
+add constraint fk_enroll_student
+foreign key (regno)
+references STUDENT(regno);
+
+alter table ENROLL
+add constraint fk_enroll_course
+foreign key (course#)
+references COURSE(course#);
+
+alter table ENROLL
+add constraint fk_enroll_text
+foreign key (book_isbn)
+references TEXT(book_isbn);
+
+alter table BOOK_ADOPTATION
+add constraint fk_bookadop_course
+foreign key (course#)
+references COURSE(course#);
+
+alter table BOOK_ADOPTATION
+add constraint fk_bookadop_text
+foreign key (book_isbn)
+references TEXT(book_isbn);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+POPULATION
+
+insert into STUDENT values('101','Saksham Khetan','Computer Science','14-JAN-2005');
+insert into STUDENT values('102','Achal Pant','Electrical Eng','11-APR-2005');
+insert into STUDENT values('103','Misha Jain','CSE-AIML','27-OCT-2005');
+insert into STUDENT values('104','Akshita Sinha','Arts','29-JUN-2004');
+insert into STUDENT values('105','Priyansh Nandan','Computer Science','16-OCT-2004');
+
+insert into COURSE values(1001,'Mathematics','MAT');
+insert into COURSE values(3010,'Operating Systems','CSE');
+insert into COURSE values(2901,'Signals and Systems','ELE');
+insert into COURSE values(1004,'Machine Learning','AIML');
+insert into COURSE values(4008,'Data Structures','ICT');
+
+insert into TEXT values(10, 'Expert Data Structures with C++', 'Khanna Book Publishing', 'R.B. Patel');
+insert into TEXT values(98, 'Signal Processing and Linear Systems', 'Oxford University Press', 'B.P. Lathi');
+insert into TEXT values(76, 'Higher Engineering Mathematic', 'Tata McGraw Hill', 'Ramana B.V.');
+insert into TEXT values(21, 'Artificial Intelligence and Machine Learning', 'PHI Publications', 'Chandra S.S. & H.S. Anand');
+insert into TEXT values(13, 'Discrete Structures', 'Khanna Book Publishing', 'S.B. Singh');
+insert into TEXT values(15, 'Operating systems', 'Tata McGraw Hill', 'Abraham');
+
+insert into ENROLL values('103',1004,4,21);
+insert into ENROLL values('103',1001,4,13);
+insert into ENROLL values('105',4008,4,10);
+insert into ENROLL values('104',3010,6,15);
+insert into ENROLL values('105',3010,4,15);
+insert into ENROLL values('102',2901,4,98);
+
+insert into BOOK_ADOPTATION values(2901,4,98);
+insert into BOOK_ADOPTATION values(3010,6,15);
+insert into BOOK_ADOPTATION values(4008,4,10);
+insert into BOOK_ADOPTATION values(1001,4,76);
+insert into BOOK_ADOPTATION values(1001,6,13);
+insert into BOOK_ADOPTATION values(1004,6,21);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+SQL-QUERIES
+
+a)
+select course#,booktitle 
+from BOOK_ADOPTATION natural join TEXT
+where course# in (
+    select course#
+    from BOOK_ADOPTATION
+    group by course#
+    having COUNT(book_isbn) > 1
+);
+
+b)
+select dept
+from COURSE
+where not exists (
+    select *
+    from BOOK_ADOPTATION ba join TEXT t on ba.book_isbn = t.book_isbn
+    where ba.course# = COURSE.course# 
+    and t.publisher != 'Particular Publisher Name'
+)
+GROUP BY dept;
+
+c)
+select regno, name
+from STUDENT
+where regno in (
+    select regno
+    from ENROLL natural join COURSE
+    group by regno
+    having count(distinct COURSE.dept) > 1
+);
+
+d)
+select regno, name
+from STUDENT
+where regno not in (
+    select regno
+    from ENROLL
+);
+
+e)
+select C.dept
+from COURSE C
+where not exists (
+    select T.book_isbn
+    from TEXT T
+    where T.publisher = 'Publisher_Name'
+    and not exists (
+        select *
+        from BOOK_ADOPTATION BA
+        where BA.course# = C.course#
+        and BA.book_isbn = T.book_isbn
+    )
+);
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+OUTPUTS for QUERIES
+
+SQL> select course#,booktitle
+  2  from BOOK_ADOPTATION natural join TEXT
+  3  where course# in (
+  4      select course#
+  5      from BOOK_ADOPTATION
+  6      group by course#
+  7      having COUNT(book_isbn) > 1
+  8  );
+
+   COURSE# BOOKTITLE
+---------- --------------------------------------------------
+      1001 Higher Engineering Mathematic
+      1001 Discrete Structures
+
+
+SQL> select dept
+  2  from COURSE
+  3  where not exists (
+  4      select *
+  5      from BOOK_ADOPTATION ba join TEXT t on ba.book_isbn = t.book_isbn
+  6      where ba.course# = COURSE.course#
+  7      and t.publisher != 'Particular Publisher Name'
+  8  )
+  9  GROUP BY dept;
+
+no rows selected
+
+
+SQL> select regno, name
+  2  from STUDENT
+  3  where regno in (
+  4      select regno
+  5      from ENROLL natural join COURSE
+  6      group by regno
+  7      having count(distinct COURSE.dept) > 1
+  8  );
+
+REGNO                NAME
+-------------------- --------------------------------------------------
+103                  Misha Jain
+105                  Priyansh Nandan
+
+
+SQL> select regno, name
+  2  from STUDENT
+  3  where regno not in (
+  4      select regno
+  5      from ENROLL
+  6  );
+
+REGNO                NAME
+-------------------- --------------------------------------------------
+101                  Saksham Khetan
+
+
+SQL> select C.dept
+  2  from COURSE C
+  3  where not exists (
+  4      select T.book_isbn
+  5      from TEXT T
+  6      where T.publisher = 'Publisher_Name'
+  7      and not exists (
+  8          select *
+  9          from BOOK_ADOPTATION BA
+ 10          where BA.course# = C.course#
+ 11          and BA.book_isbn = T.book_isbn
+ 12      )
+ 13  );
+
+DEPT
+------------------------------
+MAT
+CSE
+ELE
+AIML
+ICT
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

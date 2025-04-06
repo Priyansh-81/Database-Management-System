@@ -1,0 +1,470 @@
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Sat Feb 1 14:05:00 2025
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+Enter user-name: CCE230953450@ictorcl
+Enter password:
+Last Successful login time: Sat Feb 01 2025 13:49:47 +05:30
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0
+
+SQL> select * from PERSON;
+
+DRIVER_ID  NAME                           ADDRESS
+---------- ------------------------------ ------------------------------
+p103       Saksham                        Kolkata
+p104       Agasi                          Pune
+p105       Laxman                         Thane
+p101       Priyansh                       kalkaji,Delhi
+p102       Ayrton                         Rohini ,Delhi
+
+SQL> select * from CAR;
+
+REGNO                MODEL                                YEAR
+-------------------- ------------------------------ ----------
+WB45                 G-Wagon                              2022
+MH88                 i10                                  1969
+MH69                 Creta                                2016
+DL3C                 Dezire                               2017
+DL4C                 sunny                                2014
+
+SQL> select * from ACCIEDENT;
+select * from ACCIEDENT
+              *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> select * from ACCIDENT;
+
+REPORT_NUMBER ACCD_DATE LOCATION
+------------- --------- --------------------------------------------------
+          112 21-OCT-23 Kolkata
+          113 21-NOV-23 JAMMU
+           12 25-JAN-25 Manipal
+           14 14-FEB-19 mars
+
+SQL> select * from OWNS;
+
+DRIVER_ID                      REGNO
+------------------------------ --------------------
+p101                           DL4C
+p101                           DL7C
+p102                           HR7C
+p103                           WB45
+p104                           MH88
+
+SQL> select * from PARTICIPATED;
+
+DRIVER_ID                      REGNO                REPORT_NUMBER DAMAGE_AMOUNT
+------------------------------ -------------------- ------------- -------------
+p101                           DL4C                            12         25000
+p104                           MH88                           112         63999
+
+SQL> insert into PERSON values('p106','Ramesh','Haldwani');
+
+1 row created.
+
+SQL> insert into CAR values('UK87','HummerEV',2008);
+
+1 row created.
+
+SQL> insert into ACCIDENT values(118,'27-NOV-2008','NOIDA');
+
+1 row created.
+
+SQL> insert into OWNS values('p106','UK87');
+
+1 row created.
+
+SQL> insert into PARTICIPATED values('p106','UK87',118,42000);
+
+1 row created.
+
+SQL> select count(DRIVER_ID)
+  2  from PARTICIPATED natural join ACCIDENT
+  3  where extract (year from accd_date) = 2008;
+
+COUNT(DRIVER_ID)
+----------------
+               1
+
+SQL> select count(DRIVER_ID) as Total
+  2  from PARTICIPATED natural join ACCIDENT
+  3  where extract (year from accd_date) = 2008;
+
+     TOTAL
+----------
+         1
+
+SQL> insert into PERSON values('p107','Samesh','Agra');
+
+1 row created.
+
+SQL> insert into CAR values('UP17','Dezire',2002);
+
+1 row created.
+
+SQL> insert into ACCIDENT values(2071,'27-MAR-2008','GURUGRAM');
+
+1 row created.
+
+SQL> insert into OWNS values('p107','UP17');
+
+1 row created.
+
+SQL>  insert into PARTICIPATED values('p107','UP17',2071,44091);
+
+1 row created.
+
+SQL> select count(DRIVER_ID) as Total
+  2  from PARTICIPATED natural join ACCIDENT
+  3  where extract (year from accd_date) = 2008;
+
+     TOTAL
+----------
+         2
+
+SQL> select REGNO,MODEL,count(REPORT_NUMBER) as NUMBER OF ACCIDENTS
+  2  from CARS, PARTICIPATED
+  3  where CARS.REGNO=PARTICIPATED.REGNO and MODEL='Dezire'
+  4  group by MODEL;
+select REGNO,MODEL,count(REPORT_NUMBER) as NUMBER OF ACCIDENTS
+                                           *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected
+
+
+SQL> select REGNO,MODEL,count(REPORT_NUMBER) as NUMBER_OF_ACCIDENTS
+  2  from CARS, PARTICIPATED
+  3  where CARS.REGNO=PARTICIPATED.REGNO and MODEL='Dezire'
+  4  group by MODEL;
+from CARS, PARTICIPATED
+     *
+ERROR at line 2:
+ORA-00942: table or view does not exist
+
+
+SQL> select REGNO,MODEL,count(REPORT_NUMBER) as NUMBER_OF_ACCIDENTS
+  2  from CAR, PARTICIPATED
+  3  where CAR.REGNO=PARTICIPATED.REGNO and MODEL='Dezire'
+  4  group by MODEL;
+select REGNO,MODEL,count(REPORT_NUMBER) as NUMBER_OF_ACCIDENTS
+       *
+ERROR at line 1:
+ORA-00918: column ambiguously defined
+
+
+SQL> select MODEL,count(REPORT_NUMBER) as NUMBER_OF_ACCIDENTS
+  2  from CAR, PARTICIPATED
+  3  where CAR.REGNO=PARTICIPATED.REGNO and MODEL='Dezire'
+  4  group by MODEL;
+
+MODEL  NUMBER_OF_ACCIDENTS
+------ -------------------
+Dezire                   1
+
+SQL> select * from PARTICIPATED;
+
+DRIVER_ID                      REGNO                REPORT_NUMBER DAMAGE_AMOUNT
+------------------------------ -------------------- ------------- -------------
+p101                           DL4C                            12         25000
+p104                           MH88                           112         63999
+p106                           UK87                           118         42000
+p107                           UP17                          2071         44091
+
+SQL> select * from CAR;
+
+REGNO                MODEL                                YEAR
+-------------------- ------------------------------ ----------
+WB45                 G-Wagon                              2022
+MH88                 i10                                  1969
+MH69                 Creta                                2016
+DL3C                 Dezire                               2017
+DL4C                 sunny                                2014
+UK87                 HummerEV                             2008
+UP17                 Dezire                               2002
+
+7 rows selected.
+
+SQL> select * from OWNS;
+
+DRIVER_ID                      REGNO
+------------------------------ --------------------
+p101                           DL4C
+p101                           DL7C
+p102                           HR7C
+p103                           WB45
+p104                           MH88
+p106                           UK87
+p107                           UP17
+
+7 rows selected.
+
+SQL> insert into OWNS values ('p106', 'DL3C');
+
+1 row created.
+
+SQL> select * from ACCIDENT;
+
+REPORT_NUMBER ACCD_DATE LOCATION
+------------- --------- --------------------------------------------------
+          112 21-OCT-23 Kolkata
+          113 21-NOV-23 JAMMU
+           12 25-JAN-25 Manipal
+           14 14-FEB-19 mars
+          118 27-NOV-08 NOIDA
+         2071 27-MAR-08 GURUGRAM
+
+6 rows selected.
+
+SQL> insert into ACCIDENT values(201,'27-APR-2018','PRAYAGRAJ');
+
+1 row created.
+
+SQL>  insert into PARTICIPATED values('p106','DL3C',201,15000);
+
+1 row created.
+
+SQL> select MODEL,count(REPORT_NUMBER) as NUMBER_OF_ACCIDENTS
+  2  from CAR, PARTICIPATED
+  3  where CAR.REGNO=PARTICIPATED.REGNO and MODEL='Dezire'
+  4  group by MODEL;
+
+MODEL  NUMBER_OF_ACCIDENTS
+------ -------------------
+Dezire                   2
+
+SQL>
+
+MODEL  NUMBER_OF_ACCIDENTS
+------ -------------------
+Dezire                   2
+
+SQL> select MODEL,count(REPORT_NUMBER) as NUMBER_OF_ACCIDENTS
+  2  from CAR, PARTICIPATED
+  3  where CAR.REGNO=PARTICIPATED.REGNO
+  4  group by MODEL;
+
+MODEL                          NUMBER_OF_ACCIDENTS
+------------------------------ -------------------
+i10                                              1
+Dezire                                           2
+sunny                                            1
+HummerEV                                         1
+
+SQL>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Sat Feb 1 15:46:50 2025
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+Enter user-name: CCE230953450@ictorcl
+Enter password:
+Last Successful login time: Sat Feb 01 2025 13:59:17 +05:30
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0
+
+SQL> desc PERSON
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DRIVER_ID                                 NOT NULL VARCHAR2(10)
+ NAME                                               VARCHAR2(30)
+ ADDRESS                                            VARCHAR2(30)
+
+SQL> desc CAR
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ REGNO                                     NOT NULL VARCHAR2(20)
+ MODEL                                              VARCHAR2(30)
+ YEAR                                               NUMBER(38)
+
+SQL> desc ACCIDENT
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ REPORT_NUMBER                             NOT NULL NUMBER(38)
+ ACCD_DATE                                          DATE
+ LOCATION                                           VARCHAR2(50)
+
+SQL> desc OWNS
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DRIVER_ID                                 NOT NULL VARCHAR2(30)
+ REGNO                                     NOT NULL VARCHAR2(20)
+
+SQL> desc PARTICIPATED
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DRIVER_ID                                 NOT NULL VARCHAR2(30)
+ REGNO                                     NOT NULL VARCHAR2(20)
+ REPORT_NUMBER                             NOT NULL NUMBER(38)
+ DAMAGE_AMOUNT                                      NUMBER(38)
+
+SQL> select * from PERSON;
+
+DRIVER_ID  NAME                           ADDRESS
+---------- ------------------------------ ------------------------------
+p103       Saksham                        Kolkata
+p104       Agasi                          Pune
+p105       Laxman                         Thane
+p101       Priyansh                       kalkaji,Delhi
+p102       Ayrton                         Rohini ,Delhi
+p106       Ramesh                         Haldwani
+p107       Samesh                         Agra
+
+7 rows selected.
+
+SQL> select * from CAR;
+
+REGNO                MODEL                                YEAR
+-------------------- ------------------------------ ----------
+WB45                 G-Wagon                              2022
+MH88                 i10                                  1969
+MH69                 Creta                                2016
+DL3C                 Dezire                               2017
+DL4C                 sunny                                2014
+UK87                 HummerEV                             2008
+UP17                 Dezire                               2002
+
+7 rows selected.
+
+SQL> select * from ACCIDENT;
+
+REPORT_NUMBER ACCD_DATE LOCATION
+------------- --------- --------------------------------------------------
+          112 21-OCT-23 Kolkata
+          113 21-NOV-23 JAMMU
+           12 25-JAN-25 Manipal
+           14 14-FEB-19 mars
+          118 27-NOV-08 NOIDA
+         2071 27-MAR-08 GURUGRAM
+          201 27-APR-18 PRAYAGRAJ
+
+7 rows selected.
+
+SQL> select * from OWNS;
+
+DRIVER_ID                      REGNO
+------------------------------ --------------------
+p101                           DL4C
+p101                           DL7C
+p102                           HR7C
+p103                           WB45
+p104                           MH88
+p106                           DL3C
+p106                           UK87
+p107                           UP17
+
+8 rows selected.
+
+SQL> select * from PARTICIPATED;
+
+DRIVER_ID                      REGNO                REPORT_NUMBER DAMAGE_AMOUNT
+------------------------------ -------------------- ------------- -------------
+p101                           DL4C                            12         25000
+p104                           MH88                           112         63999
+p106                           UK87                           118         42000
+p107                           UP17                          2071         44091
+p106                           DL3C                           201         15000
+
+SQL> select count(DRIVER_ID) as Total
+  2  from PARTICIPATED natural join ACCIDENT natural join OWNS
+  3  where extract (year from accd_date) = 2008;
+
+     TOTAL
+----------
+         2
+
+SQL> select MODEL,count(REPORT_NUMBER) as NUMBER_OF_ACCIDENTS
+  2  from CAR, PARTICIPATED
+  3  where CAR.REGNO=PARTICIPATED.REGNO
+  4  group by MODEL;
+
+MODEL                          NUMBER_OF_ACCIDENTS
+------------------------------ -------------------
+i10                                              1
+Dezire                                           2
+sunny                                            1
+HummerEV                                         1
+
+SQL> select NAME as OWNER_NAME, count(REPORT_NUMBER) as "No. of Accidents", sum(DAMAGE_AMOUNT) as "Total Damage Amount"
+  2  from PERSON natural join PARTICIPATED
+  3  group by NAME
+  4  order by sum(DAMAGE_AMOUNT) desc;
+
+OWNER_NAME                     No. of Accidents Total Damage Amount
+------------------------------ ---------------- -------------------
+Agasi                                         1               63999
+Ramesh                                        2               57000
+Samesh                                        1               44091
+Priyansh                                      1               25000
+
+SQL> select DRIVER_ID, NAME
+  2  from PERSON natural join PARTICIPATED
+  3  group by DRIVER_ID, NAME
+  4  having count(REPORT_NUMBER) >= 2;
+
+DRIVER_ID                      NAME
+------------------------------ ------------------------------
+p106                           Ramesh
+
+SQL> select NAME
+  2  from PERSON p
+  3  where not exists (
+  4      select *
+  5      from PARTICIPATED pa
+  6      where p.DRIVER_ID = pa.DRIVER_ID
+  7      group by pa.DRIVER_ID
+  8      having count(pa.REPORT_NUMBER) > 0
+  9  );
+
+NAME
+------------------------------
+Saksham
+Laxman
+Ayrton
+
+SQL> select NAME
+  2  from PARTICIPATED natural join PERSON
+  3  where REPORT_NUMBER=null;
+
+no rows selected
+
+
+
+SQL> select DRIVER_ID, NAME from PERSON
+  2  minus
+  3  select DRIVER_ID, NAME from PERSON natural join PARTICIPATED;
+
+DRIVER_ID                      NAME
+------------------------------ ------------------------------
+p102                           Ayrton
+p103                           Saksham
+p105                           Laxman
+
